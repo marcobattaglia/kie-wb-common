@@ -1,10 +1,13 @@
 package org.kie.workbench.common.services.datamodel.backend.server.cache;
 
 import java.io.IOException;
+
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Observes;
 import javax.inject.Inject;
 import javax.inject.Named;
+
+import java.util.LinkedList;
 
 import org.drools.core.rule.TypeMetaInfo;
 import org.drools.workbench.models.datamodel.imports.Import;
@@ -86,11 +89,22 @@ public class LRUProjectDataModelOracleCache extends LRUCache<KieProject, Project
         final KieModuleMetaData kieModuleMetaData = KieModuleMetaData.Factory.newKieModuleMetaData( builder.getKieModuleIgnoringErrors() );
         final ProjectDataModelOracleBuilder pdBuilder = ProjectDataModelOracleBuilder.newProjectOracleBuilder();
 
-        // Add all packages
-        pdBuilder.addPackages( kieModuleMetaData.getPackages() );
+        // Add all packageLinkedList
+        //correctd by mbattagl@redhat.com -> all package of the project
+        log.info("Package to register are limited!");
+        LinkedList<String> packagesToRegister = new LinkedList<String>();
+        for(String packageName : kieModuleMetaData.getPackages()){
+        	if(packageName.startsWith("org.mortgages") || packageName.startsWith("org.decisyon")){
+        		packagesToRegister.add(packageName);
+        	}
+        }
+       // pdBuilder.addPackages( kieModuleMetaData.getPackages() );
+        pdBuilder.addPackages(packagesToRegister);
+        
 
         //Add all classes from the KieModule metaData
-        for ( final String packageName : kieModuleMetaData.getPackages() ) {
+//        for ( final String packageName : kieModuleMetaData.getPackages() ) {
+        for ( final String packageName : packagesToRegister) {
             for ( final String className : kieModuleMetaData.getClasses( packageName ) ) {
                 try {
                     final Class clazz = kieModuleMetaData.getClass( packageName,
