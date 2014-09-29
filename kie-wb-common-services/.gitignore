@@ -15,3 +15,4 @@
 
 # modules that don't exist on this branch
 /kie-wb-common-rest/
+/bin

@@ -90,7 +90,10 @@ public class LRUProjectDataModelOracleCache extends LRUCache<KieProject, Project
         final ProjectDataModelOracleBuilder pdBuilder = ProjectDataModelOracleBuilder.newProjectOracleBuilder();
 
         // Add all packageLinkedList
-        //correctd by mbattagl@redhat.com -> all package of the project
+        //first test change by mbattagl@redhat.com 
+        //what are the package with the business model? 
+        //The answer could be in a file inside META-INF folder, or in a pom.xml properties
+        //Now it's hard coded in the if condition 
         log.info("Package to register are limited!");
         LinkedList<String> packagesToRegister = new LinkedList<String>();
         for(String packageName : kieModuleMetaData.getPackages()){
